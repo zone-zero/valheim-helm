@@ -2,9 +2,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "valheim.fullname" . }}-config
+  name: "{{ .Chart.Name }}-config"
   labels:
-    app: {{ template "valheim.fullname" . }}
+    app: "{{ .Chart.Name }}-server"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
