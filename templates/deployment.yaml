@@ -41,15 +41,22 @@ spec:
         {{- end }}
 
         ports:
-        - name: valheim-1
+        - name: {{ .Values.service.prefix }}-1
           containerPort: {{ .Values.env.SERVER_PORT | int }}
           protocol: UDP
-        - name: valheim-2
+        - name: {{ .Values.service.prefix }}-2
           containerPort: {{ .Values.env.SERVER_PORT | int | add 1 }}
           protocol: UDP
-        - name: valheim-3
+        - name: {{ .Values.service.prefix }}-3
           containerPort: {{ .Values.env.SERVER_PORT | int | add 2 }}
           protocol: UDP
+
+        # Enable Supervisor HTTP port if supervisor is enabled
+        {{- if  $.Values.env.SUPERVISOR_HTTP }}
+        - name: {{ .Values.service.prefix }}-supervisor-http
+          containerPort: {{ .Values.env.SUPERVISOR_HTTP_PORT | int }}
+          protocol: HTTP
+        {{ - end }}
         volumeMounts:
         - name: config
           mountPath: /config

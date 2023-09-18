@@ -8,37 +8,53 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  type: {{ .Values.valheimServer.serviceType }}
+  type: {{ .Values.service.type }}
   ports:
-  {{- if eq "LoadBalancer" .Values.valheimServer.serviceType }}
-  - name: valheim-1
+  {{- if eq "LoadBalancer" .Values.service.type }}
+  - name: {{ .Values.service.prefix }}-1
     port: {{ .Values.env.SERVER_PORT | int }}
-    targetPort: valheim-1
+    targetPort: {{ .Values.service.prefix }}-1
     protocol: UDP
-  - name: valheim-2
+  - name: {{ .Values.service.prefix }}-2
     port: {{ .Values.env.SERVER_PORT | int | add 1 }}
-    targetPort: valheim-2
+    targetPort: {{ .Values.service.prefix }}-2
     protocol: UDP
-  - name: valheim-3
+  - name: {{ .Values.service.prefix }}-3
     port: {{ .Values.env.SERVER_PORT | int | add 2 }}
-    targetPort: valheim-3
+    targetPort: {{ .Values.service.prefix }}-3
     protocol: UDP
   {{- else }}
-  - name: valheim-1
+  - name: {{ .Values.service.prefix }}-1
     port: {{ .Values.env.SERVER_PORT | int }}
-    targetPort: valheim-1
+    targetPort: {{ .Values.service.prefix }}-1
     nodePort: {{ .Values.env.SERVER_PORT | int }}
     protocol: UDP
-  - name: valheim-2
+  - name: {{ .Values.service.prefix }}-2
     port: {{ .Values.env.SERVER_PORT | int | add 1 }}
-    targetPort: valheim-2
+    targetPort: {{ .Values.service.prefix }}-2
     nodePort: {{ .Values.env.SERVER_PORT | int | add 1 }}
     protocol: UDP
-  - name: valheim-3
+  - name: {{ .Values.service.prefix }}-3
     port: {{ .Values.env.SERVER_PORT | int | add 2 }}
-    targetPort: valheim-3
+    targetPort: {{ .Values.service.prefix }}-3
     nodePort: {{ .Values.env.SERVER_PORT | int | add 2 }}
     protocol: UDP
   {{- end }}
+  {{- if  $.Values.env.SUPERVISOR_HTTP }}
+    {{- if eq "LoadBalancer" .Values.service.supervisor_type }}
+  - name: {{ .Values.service.prefix }}-supervisor-http
+    port: {{ .Values.env.SUPERVISOR_HTTP_PORT | int }}
+    targetPort: {{ .Values.service.prefix }}-supervisor-http
+    protocol: HTTP
+    {{- else }}
+  - name: {{ .Values.service.prefix }}-supervisor-http
+    port: {{ .Values.env.SUPERVISOR_HTTP_PORT | int }}
+    targetPort: {{ .Values.service.prefix }}-supervisor-http
+    nodePort: {{ .Values.env.SERVER_PORT | int }}
+    protocol: HTTP
+    {{- end }}
+  {{- end }}
+
+
   selector:
     app: "{{ .Chart.Name }}-server"
