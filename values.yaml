@@ -12,20 +12,31 @@ resources:
     memory: 6G
     cpu: 4.0
 
-valheimServer:
-  serverName: Fishy Valheim Server
-  serverPort: 2456
-  worldName: Valheim World
-  serverPublic: 1
-  updateInterval: 10800 # every 3 hours
-  backupsInterval: 43200 # every 12 hours
-  backupsDirectory: /config/backups
-  backupsMaxAge: 3 # 3 days
-  serviceType: LoadBalancer
-  externalTrafficPolicy: Cluster
-  updateCron: "*/15 * * * *"
-  restartCron: "0 5 * * *"
-  timezone: UTC
+# Environment variables to be pulled from k8s secrets
+# The secret key must exactly match the environment variable name.
+envSecrets:
+  SERVER_PASS: "valheim-secrets"
+  #SUPERVISOR_HTTP_PASS: "valheim-secrets"
+
+# Values in 'env' will be passed in as environment variables.
+# Do not set any environment vars here that you want to pull from k8s secrets. use 'envSecrets'.
+env:
+  SERVER_NAME: "Valheim on Kubernetes"
+  SERVER_PORT: 2456
+  SERVER_ARGS: "-crossplay"
+
+  ## Supervisor enable and config
+  #SUPERVISOR_HTTP: "true"
+
+  ## valheim plus enable and config
+  #VALHEIM_PLUS: true
+  #VALHEIM_PLUS_REPO: Grantapher/ValheimPlus
+  #VPCFG_VALHEIMPLUS_SERVERBROWSERADVERTISEMENT: "false"
+
+
+
+
+
 
 persistence:
   config:

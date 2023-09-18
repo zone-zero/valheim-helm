@@ -25,46 +25,30 @@ spec:
         imagePullPolicy: Always
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+        {{- if or $.Values.env $.Values.envSecrets }}
         env:
-        - name: SERVER_NAME
-          value: {{ .Values.valheimServer.serverName | quote }}
-        - name: SERVER_PORT
-          value: {{ .Values.valheimServer.serverPort | quote }}
-        - name: WORLD_NAME
-          value: {{ .Values.valheimServer.worldName | quote }}
-        - name: SERVER_PASS
-          valueFrom:
-            secretKeyRef:
-              name: serversecret
-              key: password
-        - name: SERVER_PUBLIC
-          value: {{ .Values.valheimServer.serverPublic | quote }}
-        - name: UPDATE_INTERVAL
-          value: {{ .Values.valheimServer.updateInterval | quote }}
-        - name: BACKUPS_INTERVAL
-          value: {{ .Values.valheimServer.backupsInterval | quote }}
-        - name: BACKUPS_DIRECTORY
-          value: {{ .Values.valheimServer.backupsDirectory | quote }}
-        - name: BACKUPS_MAX_AGE
-          value: {{ .Values.valheimServer.backupsMaxAge | quote }}
-        - name: TZ
-          value: {{ .Values.valheimServer.timezone | quote }}
-        - name: RESTART_CRON
-          value: {{ .Values.valheimServer.restartCron | quote }}
-        - name: UPDATE_CRON
-          value: {{ .Values.valheimServer.updateCron | quote }}
-        - name: SERVER_ARGS
-          value: "-crossplay"
+          {{- range $key, $value := $.Values.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          {{- range $key, $secret := $.Values.envSecrets }}
+          - name: {{ $key }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $secret }}
+                key: {{ $key | quote }}
+          {{- end }}
+        {{- end }}
 
         ports:
         - name: valheim-1
-          containerPort: {{ .Values.valheimServer.serverPort | int }}
+          containerPort: {{ .Values.env.SERVER_PORT | int }}
           protocol: UDP
         - name: valheim-2
-          containerPort: {{ .Values.valheimServer.serverPort | int | add 1 }}
+          containerPort: {{ .Values.env.SERVER_PORT | int | add 1 }}
           protocol: UDP
         - name: valheim-3
-          containerPort: {{ .Values.valheimServer.serverPort | int | add 2 }}
+          containerPort: {{ .Values.env.SERVER_PORT | int | add 2 }}
           protocol: UDP
         volumeMounts:
         - name: config
