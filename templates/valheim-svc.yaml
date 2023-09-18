@@ -39,7 +39,6 @@ spec:
     app: "{{ .Chart.Name }}-server"
 
 ---
----
 apiVersion: v1
 kind: Service
 metadata:

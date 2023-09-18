@@ -52,4 +52,9 @@ persistence:
     enabled: true
     size: 10Gi
     storageClassName: local-path
-  claimName: "" # provide a value to prevent PVC creation
+    claimName: "" # provide a value to prevent PVC creation
+  opt_valheim:
+    enabled: true
+    size: 10Gi
+    storageClassName: local-path
+    claimName: "" # provide a value to prevent PVC creation
