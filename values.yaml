@@ -23,7 +23,6 @@ envSecrets:
 env:
   SERVER_NAME: "Valheim on Kubernetes"
   SERVER_PORT: 2456
-  SERVER_ARGS: "-crossplay"
 
 
   ## Supervisor enable and config
