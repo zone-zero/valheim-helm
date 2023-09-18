@@ -12,32 +12,32 @@ spec:
   ports:
   {{- if eq "LoadBalancer" .Values.valheimServer.serviceType }}
   - name: valheim-1
-    port: {{ .Values.valheimServer.serverPort | int }}
+    port: {{ .Values.env.SERVER_PORT | int }}
     targetPort: valheim-1
     protocol: UDP
   - name: valheim-2
-    port: {{ .Values.valheimServer.serverPort | int | add 1 }}
+    port: {{ .Values.env.SERVER_PORT | int | add 1 }}
     targetPort: valheim-2
     protocol: UDP
   - name: valheim-3
-    port: {{ .Values.valheimServer.serverPort | int | add 2 }}
+    port: {{ .Values.env.SERVER_PORT | int | add 2 }}
     targetPort: valheim-3
     protocol: UDP
   {{- else }}
   - name: valheim-1
-    port: {{ .Values.valheimServer.serverPort | int }}
+    port: {{ .Values.env.SERVER_PORT | int }}
     targetPort: valheim-1
-    nodePort: {{ .Values.valheimServer.serverPort | int }}
+    nodePort: {{ .Values.env.SERVER_PORT | int }}
     protocol: UDP
   - name: valheim-2
-    port: {{ .Values.valheimServer.serverPort | int | add 1 }}
+    port: {{ .Values.env.SERVER_PORT | int | add 1 }}
     targetPort: valheim-2
-    nodePort: {{ .Values.valheimServer.serverPort | int | add 1 }}
+    nodePort: {{ .Values.env.SERVER_PORT | int | add 1 }}
     protocol: UDP
   - name: valheim-3
-    port: {{ .Values.valheimServer.serverPort | int | add 2 }}
+    port: {{ .Values.env.SERVER_PORT | int | add 2 }}
     targetPort: valheim-3
-    nodePort: {{ .Values.valheimServer.serverPort | int | add 2 }}
+    nodePort: {{ .Values.env.SERVER_PORT | int | add 2 }}
     protocol: UDP
   {{- end }}
   selector:
