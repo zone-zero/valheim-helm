@@ -13,6 +13,7 @@ metadata:
   {{- range $key, $value := .Values.service.game.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
+  {{- end }}
 spec:
   type: {{ .Values.service.game.type }}
   ports:
@@ -57,6 +58,7 @@ metadata:
   annotations:
   {{- range $key, $value := .Values.service.supervisor.annotations }}
     {{ $key }}: {{ $value | quote }}
+  {{- end }}
   {{- end }}
 spec:
   type: {{ .Values.service.supervisor.type }}
