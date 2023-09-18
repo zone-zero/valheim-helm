@@ -37,10 +37,12 @@ env:
 
 
 service:
-  type: LoadBalancer
   prefix: valheim #prefix to use for service and port names (<prefix>-1 through <prefix>-3), and <prefix>-supervisor-http if enabled
   #specify starting port in 'env.SERVICE_PORT'
-  supervisor_type: LoadBalancer
+  game:
+    type: LoadBalancer
+  supervisor:
+    type: LoadBalancer
 
 
 
