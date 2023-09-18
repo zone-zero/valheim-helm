@@ -11,36 +11,30 @@ metadata:
 spec:
   type: {{ .Values.service.game.type }}
   ports:
-  {{- if eq "LoadBalancer" .Values.service.game.type }}
+  
   - name: {{ .Values.service.prefix }}-1
-    port: {{ .Values.env.SERVER_PORT | int }}
+    port: {{ .Values.service.game.port | int }}
     targetPort: {{ .Values.service.prefix }}-1
+    {{- if eq "NodePort" .Values.service.game.type }}
+    nodePort: {{ .Values.service.game.port | int }}
+    {{- end }}
     protocol: UDP
   - name: {{ .Values.service.prefix }}-2
-    port: {{ .Values.env.SERVER_PORT | int | add 1 }}
+    port: {{ .Values.service.game.port | int | add 1 }}
     targetPort: {{ .Values.service.prefix }}-2
+    {{- if eq "NodePort" .Values.service.game.type }}
+    nodePort: {{ .Values.service.game.port | int | add 1 }}
+    {{- end }}
     protocol: UDP
   - name: {{ .Values.service.prefix }}-3
-    port: {{ .Values.env.SERVER_PORT | int | add 2 }}
+    port: {{ .Values.service.game.port | int | add 2 }}
     targetPort: {{ .Values.service.prefix }}-3
+    {{- if eq "NodePort" .Values.service.game.type }}
+    nodePort: {{ .Values.service.game.port | int | add 2 }}
+    {{- end }}
+
     protocol: UDP
-  {{- else }}
-  - name: {{ .Values.service.prefix }}-1
-    port: {{ .Values.env.SERVER_PORT | int }}
-    targetPort: {{ .Values.service.prefix }}-1
-    nodePort: {{ .Values.env.SERVER_PORT | int }}
-    protocol: UDP
-  - name: {{ .Values.service.prefix }}-2
-    port: {{ .Values.env.SERVER_PORT | int | add 1 }}
-    targetPort: {{ .Values.service.prefix }}-2
-    nodePort: {{ .Values.env.SERVER_PORT | int | add 1 }}
-    protocol: UDP
-  - name: {{ .Values.service.prefix }}-3
-    port: {{ .Values.env.SERVER_PORT | int | add 2 }}
-    targetPort: {{ .Values.service.prefix }}-3
-    nodePort: {{ .Values.env.SERVER_PORT | int | add 2 }}
-    protocol: UDP
-  {{- end }}
+  
   selector:
     app: "{{ .Chart.Name }}-server"
 
@@ -49,7 +43,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ .Chart.Name }}-supervisor"
+  name: "{{ .Chart.Name }}-web"
   labels:
     app: "{{ .Chart.Name }}-server"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -59,18 +53,14 @@ spec:
   type: {{ .Values.service.supervisor.type }}
   ports:
   {{- if  $.Values.env.SUPERVISOR_HTTP }}
-    {{- if eq "LoadBalancer" .Values.service.supervisor.type }}
-  - name: {{ .Values.service.prefix }}-supervisor-http
-    port: {{ .Values.env.SUPERVISOR_HTTP_PORT | int }}
-    targetPort: {{ .Values.service.prefix }}-supervisor-http
-    protocol: HTTP
-    {{- else }}
-  - name: {{ .Values.service.prefix }}-supervisor-http
-    port: {{ .Values.env.SUPERVISOR_HTTP_PORT | int }}
-    targetPort: {{ .Values.service.prefix }}-supervisor-http
-    nodePort: {{ .Values.env.SERVER_PORT | int }}
-    protocol: HTTP
+  - name: {{ .Values.service.prefix }}-web
+    port: {{ .Values.service.supervisor.port | int }}
+    {{- if eq "NodePort" .Values.service.supervisor.type }}
+    nodePort: {{ .Values.env.supervisor.port | int }}
     {{- end }}
+    targetPort: {{ .Values.service.prefix }}-web
+    protocol: TCP
+    {{- else }}
   {{- end }}
   selector:
     app: "{{ .Chart.Name }}-server"
