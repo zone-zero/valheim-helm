@@ -48,12 +48,12 @@ service:
 
 
 persistence:
-  config:
+  config: # mounts to /config, where save games are stored
     enabled: true
     size: 10Gi
     storageClassName: local-path
     claimName: "" # provide a value to prevent PVC creation
-  opt_valheim:
+  download: # mounts to /opt/valheim, where the server and mods are downloaded to
     enabled: true
     size: 10Gi
     storageClassName: local-path

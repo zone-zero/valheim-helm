@@ -1,4 +1,5 @@
 ---
+{{- if .Values.persistence.config.enabled }}
 {{- if eq .Values.persistence.config.claimName "" }}
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -16,16 +17,18 @@ spec:
     requests:
       storage: {{ .Values.persistence.config.size | quote }}
 
-{{- if .Values.persistence.config.storageClassName }}
+  {{- if .Values.persistence.config.storageClassName }}
   storageClassName: {{ .Values.persistence.config.storageClassName }}
+  {{- end }}
 {{- end }}
 {{- end }}
 ---
-{{- if eq .Values.persistence.opt_valheim.claimName "" }}
+{{- if .Values.persistence.download.enabled }}
+{{- if eq .Values.persistence.download.claimName "" }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: "{{ .Chart.Name }}-opt_valheim"
+  name: "{{ .Chart.Name }}-download"
   labels:
     app: "{{ .Chart.Name }}-server"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -36,9 +39,10 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.persistence.opt_valheim.size | quote }}
+      storage: {{ .Values.persistence.download.size | quote }}
 
-{{- if .Values.persistence.opt_valheim.storageClassName }}
-  storageClassName: {{ .Values.persistence.opt_valheim.storageClassName }}
+  {{- if .Values.persistence.download.storageClassName }}
+  storageClassName: {{ .Values.persistence.download.storageClassName }}
+  {{- end }}
 {{- end }}
 {{- end }}

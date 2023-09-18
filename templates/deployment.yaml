@@ -60,11 +60,26 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
+        - name: download
+          mountPath: /opt/valheim
       volumes:
       - name: config
+        {{- if .Values.persistence.config.enabled }}
         persistentVolumeClaim:
-{{- if eq .Values.persistence.claimName "" }}
+          {{- if eq .Values.persistence.config.claimName "" }}
           claimName: "{{ .Chart.Name }}-config"
-{{- else }}
-          claimName: {{ .Values.persistence.claimName }}
-{{- end }}
+          {{- else }}
+          claimName: {{ .Values.persistence.config.claimName }}
+          {{- end }}
+        {{- end }}
+
+      - name: download
+        {{- if .Values.persistence.download.enabled }}
+        persistentVolumeClaim:
+          {{- if eq .Values.persistence.download.claimName "" }}
+          claimName: "{{ .Chart.Name }}-download"
+          {{- else }}
+          claimName: {{ .Values.persistence.download.claimName }}
+          {{- end }}
+        {{- end }}
+
