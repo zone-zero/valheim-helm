@@ -8,6 +8,11 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+  {{- if .Values.service.game.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.service.game.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   type: {{ .Values.service.game.type }}
   ports:
@@ -48,6 +53,11 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+  {{- if .Values.service.supervisor.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.service.supervisor.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   type: {{ .Values.service.supervisor.type }}
   ports:

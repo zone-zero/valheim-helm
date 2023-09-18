@@ -41,9 +41,11 @@ service:
   game:
     type: LoadBalancer
     port: 2456
+    annotations:
   supervisor:
     type: LoadBalancer
     port: 9001
+    annotations:
 
 
 
